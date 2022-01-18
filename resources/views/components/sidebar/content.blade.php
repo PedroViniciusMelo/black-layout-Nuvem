@@ -9,6 +9,11 @@
             <i class="fas fa-user-circle"></i>
         </x-slot>
     </x-sidebar.link>
+    <x-sidebar.link title="Containers" href="{{ route('images.index') }}" :isActive="request()->routeIs('images.index')">
+        <x-slot name="icon">
+            <i class="fas fa-server"></i>
+        </x-slot>
+    </x-sidebar.link>
     @if(Auth::user()->isAdmin())
         <x-sidebar.link title="Admin area" href="{{ route('dashboard') }}" :isActive="request()->routeIs('admin.area')">
             <x-slot name="icon">
@@ -45,11 +50,6 @@
         <x-sidebar.link title="Basic" href="{{ route('dashboard') }}" :isActive="request()->routeIs('aluno.basic.index')">
             <x-slot name="icon">
                 <i class="fas fa-star-half-alt"></i>
-            </x-slot>
-        </x-sidebar.link>
-        <x-sidebar.link title="Containers" href="{{ route('dashboard') }}" :isActive="request()->routeIs('aluno.basic.containers')">
-            <x-slot name="icon">
-                <i class="fas fa-server"></i>
             </x-slot>
         </x-sidebar.link>
     @endif

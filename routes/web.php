@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\Api\ContainersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +17,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::group(['middleware' => 'auth'], function () {
+
+    //Images
+    Route::resource('images', ImagesController::class);
+
+
+    //Containers
+    Route::post('containers-instace', [ImagesController::class, 'configureContainer'])->name('instance.configure');
+    Route::get('containers-instace', [ContainersController::class, 'index'])->name('instance.index');
+    Route::resource('containers', ContainersController::class);
+    Route::get('terminal-tab/{docker_id}', [ContainersController::class, 'terminalNewTab'])->name('container.terminalTab');
 });
 
 Route::get('/dashboard', function () {
