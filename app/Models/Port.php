@@ -11,10 +11,10 @@ class Port extends Model
 
     protected $fillable = [
         'ip',
-        'privatePort',
-        'publicPort',
+        'private_port',
+        'public_port',
         'type',
-        'networkSettings',
+        'network_settings',
         'disponivel'
     ];
 

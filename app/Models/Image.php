@@ -11,7 +11,16 @@ class Image extends Model
     use SoftDeletes;
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'fromImage', 'fromSrc', 'repo', 'tag', 'message', 'user_type'];
+    protected $fillable = [
+        'name',
+        'description',
+        'from_image',
+        'from_src',
+        'repo',
+        'tag',
+        'message',
+        'user_type'
+    ];
 
     public function getInstances()
     {

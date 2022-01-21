@@ -17,8 +17,8 @@ class CreateAtividadeMaquinasTable extends Migration
             $table->id();
             $table->string('hashcode_maquina');
             $table->foreign('hashcode_maquina')->references('hashcode')->on('maquinas');
-            $table->dateTime('dataHoraInicio');
-            $table->dateTime('dataHoraFim')->nullable();
+            $table->dateTime('data_hora_inicio');
+            $table->dateTime('data_hora_fim')->nullable();
             $table->dateTime('last_notification')->nullable();
             $table->timestamps();
         });

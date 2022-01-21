@@ -17,8 +17,8 @@ class CreateImagesTable extends Migration
             $table->string('photo')->nullable();
             $table->string('website')->nullable();
             $table->string('description', 10240);
-            $table->string('fromImage');
-            $table->string('fromSrc')->nullable();
+            $table->string('from_image');
+            $table->string('from_src')->nullable();
             $table->string('repo')->nullable();
             $table->string('tag');
             $table->string('message')->nullable();

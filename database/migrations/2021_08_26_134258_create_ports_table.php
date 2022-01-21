@@ -17,10 +17,10 @@ class CreatePortsTable extends Migration
             $table->id();
 
             $table->string('ip')->nullable(true);
-            $table->string('privatePort')->nullable(true);
-            $table->string('publicPort')->nullable(true);
+            $table->string('private_port')->nullable(true);
+            $table->string('public_port')->nullable(true);
             $table->string('type')->nullable(true);
-            $table->json('networkSettings')->nullable(true);
+            $table->json('network_settings')->nullable(true);
 
             $table->unsignedBigInteger('container_id');
             $table->foreign('container_id')->references('id')->on('containers');

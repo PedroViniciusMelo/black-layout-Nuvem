@@ -22,7 +22,7 @@ class ImagesController extends Controller
 
     public function create()
     {
-        return view('pages/images/images_new');
+        return view('pages.images.create');
     }
 
     public function store(Request $request)
@@ -34,13 +34,13 @@ class ImagesController extends Controller
 
             return redirect()->route('images.index')->with('success', 'Container created!!!');
         } else {
-            return redirect()->route('images.index')->with('error', 'User not have permition for this!!!');
+            return redirect()->route('images.index')->with('error', 'User do not have permission for this!!!');
         }
     }
 
     public function edit($id)
     {
-        return view('pages/images/images_edit', ['image' => Image::findOrFail($id)]);
+        return view('pages.images.create', ['image' => Image::findOrFail($id)]);
     }
 
     public function update(Request $request, $id)
@@ -58,7 +58,7 @@ class ImagesController extends Controller
 
     public function destroy($id)
     {
-        $container = Image::findOrFail('id', $id);
+        $container = Image::findOrFail($id);
 
         $container->delete();
 
@@ -67,24 +67,18 @@ class ImagesController extends Controller
             ->with('success', 'Container deleted!!!');
     }
 
-    public function configureContainer(Request $request)
+    public function configureContainer($image_id)
     {
-        $params = [
-            'image' => Image::firstWhere('id', $request->image_id),
-            'user' => Auth::user()->name,
-            'user_id' => Auth::user()->id,
-        ];
-
-        return view('pages.images.containers_config', $params);
+        return view('pages.images.containers_config', ['image' => Image::findOrFail($image_id)]);
     }
 
     private function validar(Request $request)
     {
         $this->validate($request, [
             'name' => ['required'],
-            'description' => ['required '],
-            'fromImage' => ['required '],
-            'tag' => ['required '],
+            'description' => ['required'],
+            'from_image' => ['required'],
+            'tag' => ['required'],
         ]);
     }
 
@@ -98,10 +92,8 @@ class ImagesController extends Controller
         $imagem = new Image();
         $imagem->name = $pieces[0];
         $imagem->description = "Imagem criada de um Dockerfile";
-        $imagem->fromImage = $pieces[0];
+        $imagem->from_image = $pieces[0];
         $imagem->tag = $pieces[1];
-        $imagem->created_at = now();
-        $imagem->updated_at = now();
         $imagem->save();
 
         return redirect()->back();

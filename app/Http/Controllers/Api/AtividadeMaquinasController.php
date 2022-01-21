@@ -19,12 +19,12 @@ class AtividadeMaquinasController extends Controller
         $hash = $request->input('hashcode_maquina');
         $data = [
             'hashcode_maquina' => $hash,
-            'dataHoraInicio' => now(),
+            'data_hora_inicio' => now(),
             'last_notification' => now(),
         ];
 
         $machine = Maquina::firstWhere('hashcode', $hash);
-        $activity = AtividadeMaquina::firstWhere(['dataHoraFim' => null, 'hashcode_maquina' => $hash]);
+        $activity = AtividadeMaquina::firstWhere(['data_hora_fim' => null, 'hashcode_maquina' => $hash]);
 
         if ($machine) {
             if ($activity) {
@@ -43,15 +43,15 @@ class AtividadeMaquinasController extends Controller
 
     public function show($id)
     {
-        return AtividadeMaquina::firstWhere('id', $id);
+        return AtividadeMaquina::findOrFail($id);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $hash = $request->input('hashcode_maquina');
 
         $machine = Maquina::firstWhere('hashcode', $hash);
-        $activity = AtividadeMaquina::firstWhere(['dataHoraFim' => null, 'hashcode_maquina' => $hash]);
+        $activity = AtividadeMaquina::firstWhere(['data_hora_fim' => null, 'hashcode_maquina' => $hash]);
 
         if ($machine && $activity) {
             $activity->dataHoraFim = now();
@@ -64,7 +64,7 @@ class AtividadeMaquinasController extends Controller
 
     public function destroy($id)
     {
-        $atividade = AtividadeMaquina::firstWhere('id', $id);
+        $atividade = AtividadeMaquina::findOrFail($id);
         $atividade->delete();
     }
 }

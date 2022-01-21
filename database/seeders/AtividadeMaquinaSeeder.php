@@ -16,7 +16,7 @@ class AtividadeMaquinaSeeder extends Seeder
     {
         AtividadeMaquina::factory()->create([
             'hashcode_maquina' => '$2y$10$meLLu4qZwa9GXlGSB9/KLu/KDT.ayLqTAFKbtxP/qQpieyFe2.wUW',
-            'dataHoraInicio' => now(),
+            'data_hora_inicio' => now(),
             'last_notification' => now(),
             'created_at' => now(),
             'updated_at' => now(),

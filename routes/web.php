@@ -26,8 +26,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     //Containers
-    Route::post('containers-instace', [ImagesController::class, 'configureContainer'])->name('instance.configure');
-    Route::get('containers-instace', [ContainersController::class, 'index'])->name('instance.index');
+    Route::get('containers/instance/configure/{image_id}', [ImagesController::class, 'configureContainer'])->name('instance.configure');
+    Route::get('containers-instance', [ContainersController::class, 'index'])->name('instance.index');
     Route::resource('containers', ContainersController::class);
     Route::get('terminal-tab/{docker_id}', [ContainersController::class, 'terminalNewTab'])->name('container.terminalTab');
 });

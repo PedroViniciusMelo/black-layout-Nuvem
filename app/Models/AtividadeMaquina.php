@@ -11,14 +11,14 @@ class AtividadeMaquina extends Model
 
     protected $fillable = [
         'hashcode_maquina',
-        'dataHoraInicio',
-        'dataHoraFim',
+        'data_hora_inicio',
+        'data_hora_fim',
         'last_notification'
     ];
 
     public static $rules = [
         'hashcode_maquina' => ['required'],
-        'dataHoraInicio' => ['required']
+        'data_hora_inicio' => ['required']
     ];
 
     public static $messages = [

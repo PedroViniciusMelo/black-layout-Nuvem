@@ -13,8 +13,8 @@ class Container extends Model
         'hashcode_maquina',
         'docker_id',
         'user_id',
-        'dataHora_instanciado',
-        'dataHora_finalizado',
+        'data_hora_instanciado',
+        'data_hora_finalizado',
         'nickname',
         'image_id',
         'status',
@@ -24,8 +24,8 @@ class Container extends Model
     public static $rules = [
         'hashcode_maquina' => ['required'],
         'docker_id' => ['required'],
-        'dataHora_instanciado' => ['required', 'date'],
-        'dataHora_finalizado' => ['nullable', 'date'],
+        'data_hora_instanciado' => ['required', 'date'],
+        'data_hora_finalizado' => ['nullable', 'date'],
     ];
 
     public function user()
