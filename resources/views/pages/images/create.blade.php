@@ -7,7 +7,10 @@
             <p>{{__(isset($image) ? 'Create New Container Image' : '')}}</p>
         </x-slot>
 
-        <form action="{{route('images.store')}}" method="post">
+        <form action="{{isset($image) ? route('images.update', $image->id) : route('images.store')}}" method="post">
+            @if(isset($image))
+                @method('PUT')
+            @endif
             @csrf
             <div class="grid gap-6">
                 <div class="space-y-2">

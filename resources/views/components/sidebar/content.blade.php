@@ -4,7 +4,7 @@
             <i class="fas fa-tachometer-alt"></i>
         </x-slot>
     </x-sidebar.link>
-    <x-sidebar.link title="User Profile" href="{{ route('dashboard') }}" :isActive="request()->routeIs('profile.edit')">
+    <x-sidebar.link title="User Profile" href="{{ route('user.update') }}" :isActive="request()->routeIs('user.update')">
         <x-slot name="icon">
             <i class="fas fa-user-circle"></i>
         </x-slot>

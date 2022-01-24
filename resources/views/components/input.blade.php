@@ -10,3 +10,7 @@ focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gr
 dark:text-gray-300 dark:focus:ring-offset-dark-eval-1',
 ])
 !!}>
+
+@if ($errors->has($attributes['name']))
+    <p class="text-red-600">{{  $errors->first($attributes['name']) }}</p>
+@endif

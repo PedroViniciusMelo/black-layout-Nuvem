@@ -8,6 +8,7 @@
         </x-slot>
 
         <form action="{{route('containers.store')}}" method="post">
+            <input type="hidden" name="image_id" value="{{old('image_id', $image->id ?? null)}}">
             @csrf
             <h4 class="card-title">Image Selected : {{ $image->name }}</h4>
 

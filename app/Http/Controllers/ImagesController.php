@@ -30,6 +30,7 @@ class ImagesController extends Controller
         $this->validar($request);
 
         if (Auth::user()->isAdmin()) {
+            $request['user_type'] = 'advanced';
             Image::create($request->all());
 
             return redirect()->route('images.index')->with('success', 'Container created!!!');

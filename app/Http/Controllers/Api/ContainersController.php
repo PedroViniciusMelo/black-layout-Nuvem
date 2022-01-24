@@ -86,12 +86,13 @@ class ContainersController extends Controller
         return view('pages/my-containers/my_containers_details', $params);
     }
 
-    public function store(Request $request, $image_id)
+    public function store(Request $request)
     {
         try {
             $url = env('DOCKER_HOST');
             $data = $this->setDefaultDockerParams($request->all());
-            $this->pullImage($url, Image::findOrFail($image_id));
+
+            $this->pullImage($url, Image::findOrFail($request['image_id']));
             $this->createContainer($url, $data);
 
             return redirect()->route('instance.index')->with('success', 'Container creation is running!');
