@@ -12,16 +12,13 @@
                 <span>{{__('New container')}}</span>
             </x-button>
         </x-slot>
-        <ul class="bg-white dark:bg-dark-bg">
-            <li class="flex justify-between">
-                <div
-                    class="grid grid-cols-3 gap-4 content-center w-full rounded-lg bg-stripes-light-blue text-center h-56 bg-white dark:bg-dark-eval-2 rounded rounded-md px-8 py-4">
-                    <div>{{__('Image')}}</div>
-                    <div>{{__('Status')}}</div>
-                    <div>{{__('Actions')}}</div>
-                </div>
-            </li>
-                @foreach ($images as $image)
+        <x-table-list>
+            <x-slot name="header">
+                <div>{{__('Image')}}</div>
+                <div>{{__('Status')}}</div>
+                <div>{{__('Actions')}}</div>
+            </x-slot>
+            @foreach ($images as $image)
                 <li class="flex justify-between p-2">
                     <div class="grid grid-cols-3 gap-4 content-center w-full rounded-lg bg-stripes-light-blue text-center h-56 bg-white dark:bg-dark-eval-2 rounded rounded-md px-8 py-4">
                         <div>{{$image->name}}</div>
@@ -75,7 +72,7 @@
                     </div>
                 </li>
             @endforeach
-        </ul>
+        </x-table-list>
         {!! $images->links() !!}
     </x-card>
 </x-app-layout>

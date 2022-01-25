@@ -75,4 +75,6 @@
     </div>
 </body>
 
+{{$scripts ?? null}}
+
 </html>

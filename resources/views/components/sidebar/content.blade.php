@@ -15,7 +15,7 @@
         </x-slot>
     </x-sidebar.link>
     @if(Auth::user()->isAdmin())
-        <x-sidebar.link title="Admin area" href="{{ route('dashboard') }}" :isActive="request()->routeIs('admin.area')">
+        <x-sidebar.link title="Admin area" href="{{ route('admin.area') }}" :isActive="request()->routeIs('admin.area')">
             <x-slot name="icon">
                 <i class="fas fa-chart-bar"></i>
             </x-slot>

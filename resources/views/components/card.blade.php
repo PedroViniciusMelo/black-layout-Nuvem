@@ -9,4 +9,8 @@
     </div>
     <hr class="pb-3">
     {{$slot}}
+    @if(isset($footer))
+        <hr class="pb-3 pt-3">
+        {{$footer}}
+    @endif
 </div>
