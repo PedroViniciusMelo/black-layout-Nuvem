@@ -5,40 +5,81 @@
                 {{ __('Dashboard') }}
             </h2>
         </x-slot>
-        <ul class="bg-white dark:bg-dark-bg">
-            <li class="flex justify-between">
-                <div class="grid grid-cols-3 gap-4 content-center w-full rounded-lg bg-stripes-light-blue text-center h-56 bg-white dark:bg-dark-eval-2 rounded rounded-md px-8 py-4">
-                    <div>{{__('Container')}}</div>
-                    <div>{{__('Status')}}</div>
-                    <div>{{__('Actions')}}</div>
-                </div>
-            </li>
-            <li class="flex justify-between p-2">
-                <div class="grid grid-cols-3 gap-4 content-center w-full rounded-lg bg-stripes-light-blue text-center h-56 bg-white dark:bg-dark-eval-2 rounded rounded-md px-8 py-4">
-                    <div>{{__('Container')}}</div>
-                    <div>{{__('Status')}}</div>
-                    <x-dropdown>
-                        <x-slot name="trigger">
-                            <i class="fas fa-ellipsis-v dark:bg-white"></i>
-                        </x-slot>
-                        <x-slot name="content">
-                            <div>
-                                <a href="#">
-                                    <i class="fas fa-eye mr-2"></i>
-                                    <span>{{__('View')}}</span>
-                                </a>
-                            </div>
-                            <div class="py-1">
-                                <a href="#">
-                                    <i class="fas fa-pen mr-2"></i>
-                                    <span>{{__('Edit')}}</span>
-                                </a>
-                            </div>
-                            <hr>
-                        </x-slot>
-                    </x-dropdown>
-                </div>
-            </li>
-        </ul>
+        <x-table-list>
+            <x-slot name="header">
+                <th>
+                    {{__('Container')}}
+                </th>
+                <th>
+                    {{__('Status')}}
+                </th>
+                <th>
+                    {{__('Actions')}}
+                </th>
+            </x-slot>
+            <x-slot name="body">
+                <tr>
+                    <x-left-table-item>
+                        {{__('Container')}}
+                    </x-left-table-item>
+                    <x-table-item>
+                        {{__('Status')}}
+                    </x-table-item>
+                    <x-right-table-item>
+                        <x-dropdown>
+                            <x-slot name="trigger">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </x-slot>
+                            <x-slot name="content">
+                                <div>
+                                    <a href="#">
+                                        <i class="fas fa-eye mr-2"></i>
+                                        <span>{{__('View')}}</span>
+                                    </a>
+                                </div>
+                                <div class="py-1">
+                                    <a href="#">
+                                        <i class="fas fa-pen mr-2"></i>
+                                        <span>{{__('Edit')}}</span>
+                                    </a>
+                                </div>
+                                <hr>
+                            </x-slot>
+                        </x-dropdown>
+                    </x-right-table-item>
+                </tr>
+
+                <tr>
+                    <x-left-table-item>
+                        {{__('Container')}}
+                    </x-left-table-item>
+                    <x-table-item>
+                        {{__('Status')}}
+                    </x-table-item>
+                    <x-right-table-item>
+                        <x-dropdown>
+                            <x-slot name="trigger">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </x-slot>
+                            <x-slot name="content">
+                                <div>
+                                    <a href="#">
+                                        <i class="fas fa-eye mr-2"></i>
+                                        <span>{{__('View')}}</span>
+                                    </a>
+                                </div>
+                                <div class="py-1">
+                                    <a href="#">
+                                        <i class="fas fa-pen mr-2"></i>
+                                        <span>{{__('Edit')}}</span>
+                                    </a>
+                                </div>
+                                <hr>
+                            </x-slot>
+                        </x-dropdown>
+                    </x-right-table-item>
+                </tr>
+            </x-slot>
+        </x-table-list>
     </x-card>
 </x-app-layout>

@@ -113,14 +113,23 @@
         </x-card>
     </x-card>
     <x-slot name="scripts">
-        <link href="{{asset('charts/demo.css')}}">
-        <script src="{{asset('charts/demo.js')}}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
-
         <script>
-            $(document).ready(function () {
-                md.initDashboardPageCharts();
+            function ready(callback){
+                // in case the document is already rendered
+                if (document.readyState!='loading') callback();
+                // modern browsers
+                else if (document.addEventListener) document.addEventListener('DOMContentLoaded', callback);
+                // IE <= 8
+                else document.attachEvent('onreadystatechange', function(){
+                        if (document.readyState=='complete') callback();
+                    });
+            }
+
+            ready(function(){
+                md.initDashboardPageCharts()
             });
+
+
             let ctx = document.getElementById('chartImages').getContext('2d');
             let myChart = new Chart(ctx, {
                 type: 'bar',
