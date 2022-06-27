@@ -30,12 +30,12 @@
                 <i class="fas fa-desktop"></i>
             </x-slot>
         </x-sidebar.link>
-        <x-sidebar.link title="Images" href="{{ route('dashboard') }}" :isActive="request()->routeIs('images.index')">
+        <x-sidebar.link title="Images" href="{{ route('dashboard') }}" :isActive="false">
             <x-slot name="icon">
                 <i class="fab fa-docker"></i>
             </x-slot>
         </x-sidebar.link>
-        <x-sidebar.link title="My containers" href="{{ route('dashboard') }}" :isActive="request()->routeIs('instance.index')">
+        <x-sidebar.link title="My containers" href="{{ route('containers.index') }}" :isActive="request()->routeIs('containers.index')">
             <x-slot name="icon">
                 <i class="fas fa-server"></i>
             </x-slot>

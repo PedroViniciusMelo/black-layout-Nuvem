@@ -26,8 +26,8 @@ class CreateContainersTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('image_id')->references('id')->on('images');
 
-            $table->dateTime('dataHora_instanciado');
-            $table->dateTime('dataHora_finalizado')->nullable();
+            $table->dateTime('data_hora_instanciado');
+            $table->dateTime('data_hora_finalizado')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

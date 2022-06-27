@@ -15,7 +15,7 @@
         <x-table-list>
             <x-slot name="header">
                 <th>{{__('Image')}}</th>
-                <th>{{__('Status')}}</th>
+                <th>{{__('Description')}}</th>
                 <th>{{__('Actions')}}</th>
             </x-slot>
             <x-slot name="body">
@@ -25,7 +25,7 @@
                         <div>{{$image->name}}</div>
                     </x-left-table-item>
                     <x-table-item>
-                        <div>{{$image->status}}</div>
+                        <div>{{substr($image->description, 0, 40) . " ..."}}</div>
                     </x-table-item>
                     <x-right-table-item>
                         <x-dropdown>
@@ -56,21 +56,14 @@
                                         </a>
                                     </div>
 
-                                    <div class="py-1">
-                                        <a href="#">
-                                            <i class="fas fa-pause"></i>
-                                            <span>{{__('Pause')}}</span>
-                                        </a>
-                                    </div>
-
                                     <hr class="w-full bg-black dark:bg-white">
 
                                     <form class="py-1" action="{{route('images.destroy', $image->id)}}" method="post">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" onclick="return confirm('Are you sure?')">
-                                            <i class="fas fa-trash"></i>
-                                            <span>{{__('Delete')}}</span>
+                                            <i class="fas fa-trash" style="color: red"></i>
+                                            <span class="text-red-600">{{__('Delete')}}</span>
                                         </button>
                                     </form>
                                 </div>

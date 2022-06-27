@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\UpdateUserController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\Api\ContainersController;
@@ -21,7 +24,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::get('/dashboard', HomeController::class)->name('dashboard');
     //Admin-area
     Route::get('admin-area', [AdminAreaController::class, 'index'])->name('admin.area');
     Route::get('admin-area/requests', [AdminAreaController::class, 'requests'])->name('admin.area.requests');
@@ -36,14 +40,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Containers
     Route::get('containers/instance/configure/{image_id}', [ImagesController::class, 'configureContainer'])->name('instance.configure');
-    Route::get('containers-instance', [ContainersController::class, 'index'])->name('instance.index');
     Route::resource('containers', ContainersController::class);
+    Route::put('containers/toggle/{id}', [ContainersController::class, 'toggleContainer'])->name('toggleContainer');
     Route::get('terminal-tab/{docker_id}', [ContainersController::class, 'terminalNewTab'])->name('container.terminalTab');
-});
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    Route::put('/update/user/{id}', UpdateUserController::class)->name('update.user');
+});
 
 // useless routes
 // Just to demo sidebar dropdown links active states.

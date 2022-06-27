@@ -24,8 +24,8 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{asset('charts/demo.js')}}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.plot.ly/plotly-2.8.3.min.js"></script>
 </head>
 
 <body class="font-sans antialiased">
@@ -68,14 +68,14 @@
                 <main class="px-4 sm:px-6 flex-1">
                     {{ $slot }}
                 </main>
-
-                <!-- Page Footer -->
-                <x-footer />
             </div>
         </div>
     </div>
 </body>
 
+<script>
+
+</script>
 {{$scripts ?? null}}
 
 </html>

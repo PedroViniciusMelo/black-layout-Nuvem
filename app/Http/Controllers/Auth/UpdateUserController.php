@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\PasswordRequest;
 use App\Http\Requests\Auth\ProfileRequest;
+use App\Http\Requests\UserRequest;
+use App\Models\User;
 use Auth;
 use Hash;
 
@@ -16,9 +18,12 @@ class UpdateUserController extends Controller
      * @param ProfileRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function __invoke(ProfileRequest $request)
+    public function __invoke(UserRequest $request, $id)
     {
-        Auth::user()->update($request->all());
+        $data = $request->all();
+        $data['acess'] = $request->has('acess');
+        $user = User::findOrfail($id);
+        $result = $user->update($data);
 
         return redirect()
             ->back()

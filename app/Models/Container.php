@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Enum\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -46,5 +47,12 @@ class Container extends Model
     public function ports()
     {
         return $this->hasMany(Port::class);
+    }
+
+    public function isRunning(){
+        if($this->status == Status::RUNNING){
+            return true;
+        }
+        return false;
     }
 }

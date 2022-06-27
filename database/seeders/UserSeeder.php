@@ -16,10 +16,10 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::factory()->create([
-            'name' => 'Admin  admin',
+            'name' => 'Admin',
             'user_name' => 'admin',
             'email' => 'admin@nuvem.com',
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('admin'),
             'phone' => '8799998888',
             'user_type' => 'admin',
             'created_at' => now(),
@@ -27,10 +27,10 @@ class UserSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name' => 'Admin Admin',
+            'name' => 'Basic',
             'user_name' => 'basic',
             'email' => 'basic@material.com',
-            'password' => Hash::make('secret'),
+            'password' => Hash::make('basic'),
             'phone' => '8799998888',
             'user_type' => 'basic',
             'created_at' => now(),
@@ -38,10 +38,10 @@ class UserSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name' => 'Admin Admin',
+            'name' => 'Advanced',
             'user_name' => 'advanced',
             'email' => 'advanced@material.com',
-            'password' => Hash::make('secret'),
+            'password' => Hash::make('advanced'),
             'phone' => '8799998888',
             'user_type' => 'advanced',
             'created_at' => now(),

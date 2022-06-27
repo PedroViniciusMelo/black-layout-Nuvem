@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Enum\Status;
 use Exception;
 use App\Models\Image;
 use App\Models\Maquina;
@@ -13,45 +14,45 @@ use Illuminate\Support\Facades\Http;
 
 class ContainersController extends Controller
 {
-    public function playStop($container_id)
+    private $url;
+
+    public function __construct()
     {
-        $instancia = Container::firstWhere('docker_id', $container_id);
-        $url = env('DOCKER_HOST');
+        $this->url = env('DOCKER_HOST');
+    }
 
-        if ($instancia->data_hora_finalizado) {
-            $host = "$url/containers/$container_id/start";
-            $data_hora_fim = null;
+    public function toggleContainer($container_id)
+    {
+        $instancia = Container::findOrFail($container_id);
+        $docker_id = $instancia->docker_id;
+
+        if ($instancia->isRunning()) {
+            $host = $this->url."/containers/$docker_id/stop";
+            $status = Status::PAUSED;
         } else {
-            $host = "$url/containers/$container_id/stop";
-            $data_hora_fim = now();
+            $host = $this->url."/containers/$docker_id/start";
+            $status = Status::RUNNING;
         }
 
-        try {
-            Http::post($host);
+        $response = Http::post($host);
 
-            $instancia->data_hora_finalizado = $data_hora_fim;
-            $instancia->save();
+        $instancia->status = $status;
+        $instancia->data_hora_finalizado = $status == Status::PAUSED ? now() : null;
 
-            return redirect()
-                ->route('instance.index')
-                ->with('success', 'Container created with sucess!');
-        } catch (Exception $e) {
-            return redirect()
-                ->route('instance.index')
-                ->with('error', "Fail to stop the container! $e");
-        }
+        $instancia->save();
+
+        return redirect()
+            ->back()
+            ->with('success', 'Container toggled successfully!');
     }
 
     public function index()
     {
-        $params = [
-            'mycontainers' => Container::where('user_id', Auth::user()->id)->paginate(10),
-            'dockerHost' => env('DOCKER_HOST'),
-            'title' => 'My Containers',
-        ];
-
-
-        return view('pages/my-containers/my_containers', $params);
+        return view(
+            'pages.containers.index',
+            ['containers' => Auth::user()->containers()->paginate(10),
+            'dockerHost' => env('DOCKER_HOST')]
+        );
     }
 
     public function terminalNewTab($id)
@@ -69,13 +70,10 @@ class ContainersController extends Controller
         return view('pages/my-containers/my_containers_terminal_tab', $params);
     }
 
-
-
     public function show($id)
     {
-        $url = env('DOCKER_HOST');
-        $processes = Http::get("$url/containers/$id/top");
-        $details = Http::get("$url/containers/$id/json");
+        $processes = Http::get($this->url."/containers/$id/top");
+        $details = Http::get($this->url."/containers/$id/json");
 
         $params = [
             'mycontainer' => Container::findOrFail($id),
@@ -83,19 +81,19 @@ class ContainersController extends Controller
             'details' => $details->getStatusCode() == 200 ? $details->json() : null,
         ];
 
-        return view('pages/my-containers/my_containers_details', $params);
+        return view('pages.containers.view', $params);
     }
 
     public function store(Request $request)
     {
         try {
-            $url = env('DOCKER_HOST');
             $data = $this->setDefaultDockerParams($request->all());
+            $url = $this->url;
 
             $this->pullImage($url, Image::findOrFail($request['image_id']));
             $this->createContainer($url, $data);
 
-            return redirect()->route('instance.index')->with('success', 'Container creation is running!');
+            return redirect()->route('containers.index')->with('success', 'Container creation is running!');
         } catch (Exception $e) {
             return  $e->getMessage();
         }
@@ -103,7 +101,7 @@ class ContainersController extends Controller
 
     public function edit($id)
     {
-        return view('pages/my-containers/my_containers_edit', ['container' => Container::firstWhere('docker_id', $id)]);
+        return view('pages.containers.edit', ['container' => Container::findOrFail($id)]);
     }
 
     public function update(Request $request, $id)
@@ -124,34 +122,74 @@ class ContainersController extends Controller
 
     public function destroy($id)
     {
-        $url = env('DOCKER_HOST');
+        $container = Container::findOrFail($id);
+        $docker_id = $container->docker_id;
+        $responseStop = Http::post($this->url."/containers/$docker_id/stop")->getStatusCode();
 
-        $responseStop = Http::post("$url/containers/$id/stop");
-        if ($responseStop->getStatusCode() == 204 || $responseStop->getStatusCode() == 304) {
-            $responseDelete = Http::delete("$url/containers/$id");
-            if ($responseDelete->getStatusCode() == 204) {
-                $instancia = Container::firstWhere('docker_id', $id);
-                $instancia->delete();
 
-                return redirect()->route('instance.index')->with('success', 'Container deleted with sucess!');
+        if ($responseStop == 204 || $responseStop == 304) {
+            $responseDelete = Http::delete($this->url."/containers/$docker_id")->getStatusCode();
+            if ($responseDelete == 204) {
+                $container->delete();
+
+                return redirect()
+                    ->route('containers.index')
+                    ->with('success', 'Container deleted with successfully!');
             } else {
-                dd($responseDelete->json());
-
-                return redirect()->route('instance.index')->with('error', 'Fail, Container not delete!');
+                return redirect()
+                    ->route('containers.index')
+                    ->with('error', 'Fail, container not deleted!'.$responseDelete);
             }
         } else {
-            dd($responseStop->json());
+            return redirect()
+                ->route('instance.index')
+                ->with('error', 'Fail, container not deleted!'.$responseStop);
+        }
+    }
+
+    private function pullImage($url, Image $image)
+    {
+        $uri = "images/create?fromImage=$image->from_image&tag=$image->tag";
+        $image->from_src ? $uri .= "&fromSrc=$image->from_src" : $uri;
+        $image->repo ? $uri .= "&repo=$image->repo" : $uri;
+        $image->message ? $uri .= "&message=$image->message" : $uri;
+
+        $response = Http::post("$url/$uri");
+
+        if ($response->getStatusCode() != 200) {
+            dd($response->json());
+        }
+    }
+
+    private function createContainer($url, $data)
+    {
+        $data['user_id'] = Auth::id();
+
+        $response = Http::asJson()->post("$url/containers/create", $data);
+
+        if ($response->getStatusCode() == 201) {
+            $container_id = $response->json()['Id'];
+            $response = Http::asJson()->post("$url/containers/$container_id/start");
+
+            $data['hashcode_maquina'] = Maquina::first()->hashcode;
+            $data['docker_id'] = $container_id;
+            $data['data_hora_instanciado'] = now();
+            $data['data_hora_finalizado'] = $response->getStatusCode() == 204 ? null : now();
+
+            $container = Container::create($data);
+            $container->status = Status::RUNNING;
+            $container->save();
+        } else {
+            dd($response->json());
         }
     }
 
     private function setDefaultDockerParams(array $data)
     {
-
         $data['image'] = Image::findOrFail($data['image_id'])->from_image;
         $data['memory'] = $data['memory'] ? intval($data['memory']) : 0;
 
-        $data['env'] = $data['env_variables'] ? explode(';', $data['env_variables']) : [];
-        array_pop($data['env']); // Para remover string vazia no ultimo item do array, evitando erro na criação do container.
+        $data['env'] = $data['env_variables'] ? explode(';', trim($data['env_variables'])) : [];
 
         $data['AttachStdin'] = true;
         $data['AttachStdout'] = true;
@@ -173,42 +211,9 @@ class ContainersController extends Controller
             'Binds' => [
                 '/var/run/docker.sock:/var/run/docker.sock',
                 '/tmp:/tmp',
-             ],
+            ],
         ];
 
         return $data;
-    }
-
-    private function pullImage($url, Image $image)
-    {
-        $uri = "images/create?fromImage=$image->from_image&tag=$image->tag";
-        $image->from_src ? $uri .= "&fromSrc=$image->from_src" : $uri;
-        $image->repo ? $uri .= "&repo=$image->repo" : $uri;
-        $image->message ? $uri .= "&message=$image->message" : $uri;
-
-        $response = Http::post("$url/$uri");
-
-        if ($response->getStatusCode() != 200) {
-            dd($response->json());
-        }
-    }
-
-    private function createContainer($url, $data)
-    {
-        $response = Http::asJson()->post("$url/containers/create", $data);
-
-        if ($response->getStatusCode() == 201) {
-            $container_id = $response->json()['Id'];
-            $response = Http::asJson()->post("$url/containers/$container_id/start");
-
-            $data['hashcode_maquina'] = Maquina::first()->hashcode;
-            $data['docker_id'] = $container_id;
-            $data['data_hora_instanciado'] = now();
-            $data['data_hora_finalizado'] = $response->getStatusCode() == 204 ? null : now();
-
-            Container::create($data);
-        } else {
-            dd($response->json());
-        }
     }
 }

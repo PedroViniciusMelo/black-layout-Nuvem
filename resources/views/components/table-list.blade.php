@@ -1,4 +1,4 @@
-<table class="table-auto bg-white dark:bg-dark-bg w-full">
+<table class="table-auto bg-white dark:bg-dark-bg w-full overflow-auto">
     <thead class="bg-white dark:bg-dark-eval-2">
     <tr class="h-16">
         {{$header}}
