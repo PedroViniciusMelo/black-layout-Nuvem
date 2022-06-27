@@ -139,7 +139,7 @@
                             <div>{{$user->containers()->count()}}</div>
                         </x-table-item>
                         <x-table-item>
-                            @if($user->acess)
+                            @if($user->access)
                                 <i class="fas fa-square"></i>
                             @else
                                 <i class="far fa-square"></i>
@@ -171,7 +171,7 @@
 
                                         <div class="space-y-2">
                                             <label class="form-check-label text-body" for="exampleRadios{{$user->id}}">{{ __('Autorizar acesso.') }}
-                                                <input class="form-check-input" type="checkbox" name="acess" id="exampleRadios{{$user->id}}" value="true" @if($user->acess) checked @endif>
+                                                <input class="form-check-input" type="checkbox" name="access" id="exampleRadios{{$user->id}}" value="true" @if($user->acess) checked @endif>
                                                 <div class="form-check-sign mr-2" style="margin-top: 13px;">
                                                     <div class="check"></div>
                                                 </div>

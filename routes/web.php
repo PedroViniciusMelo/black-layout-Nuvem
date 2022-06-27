@@ -27,13 +27,15 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/dashboard', HomeController::class)->name('dashboard');
     //Admin-area
-    Route::get('admin-area', [AdminAreaController::class, 'index'])->name('admin.area');
-    Route::get('admin-area/requests', [AdminAreaController::class, 'requests'])->name('admin.area.requests');
-    Route::get('admin-area/machines', [AdminAreaController::class, 'machines'])->name('admin.area.machines');
-    Route::get('admin-area/users', [AdminAreaController::class, 'users'])->name('admin.area.users');
-    Route::get('admin-area/dockerfiles', [AdminAreaController::class, 'dockerfiles'])->name('admin.area.dockerfiles');
+    Route::get('/admin-area', [AdminAreaController::class, 'index'])->name('admin.area');
+    Route::get('/admin-area/requests', [AdminAreaController::class, 'requests'])->name('admin.area.requests');
+    Route::get('/admin-area/machines', [AdminAreaController::class, 'machines'])->name('admin.area.machines');
+    Route::get('/admin-area/users', [AdminAreaController::class, 'users'])->name('admin.area.users');
+    Route::get('/admin-area/dockerfiles', [AdminAreaController::class, 'dockerfiles'])->name('admin.area.dockerfiles');
+    Route::put('/change_access/{id}', [UpdateUserController::class, 'manageAccess'])->name('manage.access');
 
-    Route::resource('machines', MaquinasController::class)->except('index');
+    //Machines
+    Route::resource('machines', MaquinasController::class);
 
     //Images
     Route::resource('images', ImagesController::class);
@@ -44,7 +46,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::put('containers/toggle/{id}', [ContainersController::class, 'toggleContainer'])->name('toggleContainer');
     Route::get('terminal-tab/{docker_id}', [ContainersController::class, 'terminalNewTab'])->name('container.terminalTab');
 
-    Route::put('/update/user/{id}', UpdateUserController::class)->name('update.user');
+
 });
 
 // useless routes

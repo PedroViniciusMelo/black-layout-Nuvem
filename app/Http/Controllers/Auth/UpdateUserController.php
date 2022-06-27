@@ -9,6 +9,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Auth;
 use Hash;
+use Illuminate\Http\Request;
 
 class UpdateUserController extends Controller
 {
@@ -21,9 +22,22 @@ class UpdateUserController extends Controller
     public function __invoke(UserRequest $request, $id)
     {
         $data = $request->all();
-        $data['acess'] = $request->has('acess');
+        $data['access'] = $request->has('access');
         $user = User::findOrfail($id);
         $result = $user->update($data);
+
+        return redirect()
+            ->back()
+            ->with('success', 'User updated successfully!');
+    }
+
+    public function manageAccess(Request $request, $id){
+        $user = User::findOrfail($id);
+        $user->access = $request->has('access');
+        $user->user_type = $request['user_type'];
+        $user->containers = $request->has('containers') ? $request['containers'] : 1;
+
+        $user->save();
 
         return redirect()
             ->back()

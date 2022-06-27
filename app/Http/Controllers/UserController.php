@@ -42,7 +42,7 @@ class UserController extends Controller
         $this->validate($request, $request->rules());
 
         $data = $request->all();
-        $data['acess'] = $request->has('acess') ? true : false;
+        $data['access'] = $request->has('access') ? true : false;
         $user = User::firstWhere('id', $id);
         $result = $user->update($data);
         // dd($result);

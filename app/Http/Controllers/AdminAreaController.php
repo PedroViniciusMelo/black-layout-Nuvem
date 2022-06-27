@@ -19,19 +19,17 @@ class AdminAreaController extends Controller
             'machines' => Maquina::paginate($this::PAGE_LIMITE),
             'users' => User::orderBy('id')->paginate($this::PAGE_LIMITE),
             'containers' => Container::paginate($this::PAGE_LIMITE),
-            'dockerHost' => env('DOCKER_HOST'),
-            'numberOfMach' => Maquina::all()->count(),
-            'inActivity' => Maquina::where('disponivel', true)->count(),
+            'docker_host' => env('DOCKER_HOST'),
+            'machinesQuantity' => Maquina::all()->count(),
+            'machinesInActivity' => Maquina::where('disponivel', true)->count(),
             'images' => Image::paginate($this::PAGE_LIMITE),
-            'isAdmin' => Auth::user()->isAdmin(),
-            'registeredToday' => User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereDay('created_at', date('d'))->count(),
-            'registeredMonth' => User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->count(),
-            'instacesOfeachImage' => $this->getInstacesOfEachImage(),
+            'registeredToday' => User::whereDate('created_at', '=', date('Y-m-d'))->count(),
+            'registeredThisMonth' => User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->count(),
+            'instancesPerImage' => $this->getInstacesOfEachImage(),
             'graficDataUsers' => $this->getGraficDataUsers(),
             'graficDataMachines' => $this->getGraficDataMachines(),
-            'imagesLabel' => $this->getImagesLabels(),
-            'graficDataImages' => $this->getInstacesCountImages(),
-            'title' => 'Admin Area',
+            'imagesLabel' => Image::all()->pluck('name')->toArray(),
+            'graficDataImages' => $this->getInstacesCountImages()
         ];
 
         return view('pages/admin/index', $params);
@@ -48,8 +46,14 @@ class AdminAreaController extends Controller
 
     public function getGraficDataUsers()
     {
-        return json_encode([
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('1'))->count(),
+        $result = [];
+        foreach (range(1, 12) as $number) {
+            $result[$number] = User::whereYear('created_at', date('Y'))->whereMonth('created_at', date($number))->count();
+        }
+        return $result;
+        /*
+        return [
+
             User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('2'))->count(),
             User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('3'))->count(),
             User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('4'))->count(),
@@ -61,13 +65,21 @@ class AdminAreaController extends Controller
             User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('10'))->count(),
             User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('11'))->count(),
             User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('12'))->count(),
-        ]);
+        ];*/
     }
 
     public function getGraficDataMachines()
     {
-        return json_encode([
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('1'))->count(),
+        $result = [];
+        foreach (range(1, 12) as $number) {
+            $result[$number] = Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date($number))->count();
+        }
+
+        return $result;
+
+        /*
+        return [
+
             Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('2'))->count(),
             Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('3'))->count(),
             Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('4'))->count(),
@@ -79,7 +91,7 @@ class AdminAreaController extends Controller
             Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('10'))->count(),
             Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('11'))->count(),
             Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('12'))->count(),
-        ]);
+        ];*/
     }
 
     public function users()
@@ -92,7 +104,7 @@ class AdminAreaController extends Controller
                 'imagesCount' => $this->getInstanceImagesCount($users),
             ];
 
-            return view('pages/admin/users', $params);
+            return view('pages.admin.manage_users', $params);
         } else {
             return redirect()->back()->with('error', 'User not Authorized!!!');
         }
@@ -104,11 +116,11 @@ class AdminAreaController extends Controller
             $users = User::where('user_type', '!=','admin')->orderBy('id')->paginate(10);
             $params = [
                 'users' => $users,
-                'registeredToday' => User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereDay('created_at', date('d'))->count(),
-                'registeredMonth' => User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->count()
+                'registered_today' => User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereDay('created_at', date('d'))->count(),
+                'registered_this_month' => User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->count()
             ];
 
-            return view('pages/admin/requests', $params);
+            return view('pages.admin.manage_users', $params);
         } else {
             return redirect()->back()->with('error', 'User not Authorized!!!');
         }
@@ -148,7 +160,6 @@ class AdminAreaController extends Controller
 
         return $array;
     }
-
     private function getInstacesCountImages()
     {
         $images = Image::all();
@@ -159,17 +170,7 @@ class AdminAreaController extends Controller
             $array[] = Container::where('image_id', $image->id)->get()->count();
         }
 
-        return json_encode($array);
-    }
-
-    public function getImagesLabels()
-    {
-        $array = [];
-        foreach (Image::all() as $image) {
-            $array[] = $image->name;
-        }
-
-        return json_encode($array);
+        return $array;
     }
 
     public function dockerfiles()

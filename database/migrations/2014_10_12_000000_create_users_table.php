@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('phone');
             $table->integer('containers')->default(1);
             $table->string('user_type')->default('basic');
-            $table->boolean('acess')->default(false);
+            $table->boolean('access')->default(false);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

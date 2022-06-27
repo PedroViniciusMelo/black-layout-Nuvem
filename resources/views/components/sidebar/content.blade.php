@@ -20,12 +20,12 @@
                 <i class="fas fa-chart-bar"></i>
             </x-slot>
         </x-sidebar.link>
-        <x-sidebar.link title="Solicitações" href="{{ route('dashboard') }}" :isActive="request()->routeIs('admin.area.requests')">
+        <x-sidebar.link title="Solicitações" href="{{ route('admin.area.requests') }}" :isActive="request()->routeIs('admin.area.requests')">
             <x-slot name="icon">
                 <i class="fas fa-chart-bar"></i>
             </x-slot>
         </x-sidebar.link>
-        <x-sidebar.link title="Machines" href="{{ route('dashboard') }}" :isActive="request()->routeIs('user.machines')">
+        <x-sidebar.link title="Machines" href="{{ route('machines.index') }}" :isActive="request()->routeIs('machines.index')">
             <x-slot name="icon">
                 <i class="fas fa-desktop"></i>
             </x-slot>

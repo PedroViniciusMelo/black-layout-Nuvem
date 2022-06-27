@@ -9,21 +9,20 @@ use Illuminate\Support\Facades\Auth;
 
 class MaquinasController extends Controller
 {
-    public function machines()
+
+    public function index()
     {
         $user = Auth::user();
-        $params = [
+        $data = [
             'machines' => $user->machines()->orderby('id')->paginate(5),
-            'user_name' => $user->name,
-            'title' => 'Machines',
         ];
 
-        return view('pages.user.user_machines', $params);
+        return view('pages.machines.index', $data);
     }
 
     public function create()
     {
-        return view('pages.user.user_machines_new');
+        return view('pages.machines.create');
     }
 
     public function store(MachineRequest $request)
@@ -32,7 +31,7 @@ class MaquinasController extends Controller
         $maquina = Maquina::create($this->getData($request));
 
         if ($maquina) {
-            return redirect()->route('user.machines');
+            return redirect()->route('machines.index')->with(['success' => 'Máquina criada com sucesso!']);
         } else {
             return redirect()->back()->withInput();
         }
@@ -48,12 +47,12 @@ class MaquinasController extends Controller
                 ->paginate(5),
         ];
 
-        return view('pages.user.machine_show', $params);
+        return view('pages.machines.show', $params);
     }
 
     public function edit($id)
     {
-        return view('pages.user.user_machines_edit', ['machine' => Maquina::findOrFail($id)]);
+        return view('pages.machines.create', ['machine' => Maquina::findOrFail($id)]);
     }
 
     public function update(MachineRequest $request, $id)
@@ -63,7 +62,7 @@ class MaquinasController extends Controller
         $result = $maquina->update($request->all());
 
         if ($result) {
-            return redirect()->route('user.machines');
+            return redirect()->back()->with(['success' => 'Máquina atualizada com sucesso!'])->withInput();
         } else {
             return redirect()->back()->withInput();
         }
@@ -73,7 +72,7 @@ class MaquinasController extends Controller
     {
         $maquina = Maquina::findOrFail($id);
         if ($maquina->delete()) {
-            return redirect()->route('user.machines');
+            return redirect()->back()->with(['success' => 'Máquina deletada com sucesso!']);
         } else {
             return redirect()->back()->with('error', 'Falha ao deletar!');
         }
