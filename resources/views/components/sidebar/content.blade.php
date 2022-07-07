@@ -40,7 +40,7 @@
                 <i class="fas fa-server"></i>
             </x-slot>
         </x-sidebar.link>
-        <x-sidebar.link title="Dockerfiles" href="{{ route('dashboard') }}" :isActive="request()->routeIs('admin.area.dockerfiles')">
+        <x-sidebar.link title="Dockerfiles" href="{{ route('dockerfiles.index') }}" :isActive="request()->routeIs('dockerfiles.index')">
             <x-slot name="icon">
                 <i class="fas fa-server"></i>
             </x-slot>

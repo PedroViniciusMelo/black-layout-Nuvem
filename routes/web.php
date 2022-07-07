@@ -8,6 +8,7 @@ use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\Api\ContainersController;
 use App\Http\Controllers\AdminAreaController;
 use App\Http\Controllers\MaquinasController;
+use App\Http\Controllers\DockerfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,13 +41,15 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     //Images
     Route::resource('images', ImagesController::class);
 
+    //Dockerfiles
+    Route::resource('dockerfiles', DockerfileController::class);
+    Route::put('dockerfiles/build', [DockerfileController::class, 'build'])->name('dockerfiles.build');
+
     //Containers
     Route::get('containers/instance/configure/{image_id}', [ImagesController::class, 'configureContainer'])->name('instance.configure');
     Route::resource('containers', ContainersController::class);
     Route::put('containers/toggle/{id}', [ContainersController::class, 'toggleContainer'])->name('toggleContainer');
     Route::get('terminal-tab/{docker_id}', [ContainersController::class, 'terminalNewTab'])->name('container.terminalTab');
-
-
 });
 
 // useless routes
