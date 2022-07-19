@@ -46,52 +46,20 @@ class AdminAreaController extends Controller
 
     public function getGraficDataUsers()
     {
-        $result = [];
+        $result = collect();
         foreach (range(1, 12) as $number) {
-            $result[$number] = User::whereYear('created_at', date('Y'))->whereMonth('created_at', date($number))->count();
+            $result->push(User::whereYear('created_at', date('Y'))->whereMonth('created_at', date($number))->count());
         }
         return $result;
-        /*
-        return [
-
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('2'))->count(),
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('3'))->count(),
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('4'))->count(),
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('5'))->count(),
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('6'))->count(),
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('7'))->count(),
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('8'))->count(),
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('9'))->count(),
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('10'))->count(),
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('11'))->count(),
-            User::whereYear('created_at', date('Y'))->whereMonth('created_at', date('12'))->count(),
-        ];*/
     }
 
     public function getGraficDataMachines()
     {
-        $result = [];
+        $result = collect();
         foreach (range(1, 12) as $number) {
-            $result[$number] = Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date($number))->count();
+            $result->push(Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date($number))->count());
         }
-
         return $result;
-
-        /*
-        return [
-
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('2'))->count(),
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('3'))->count(),
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('4'))->count(),
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('5'))->count(),
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('6'))->count(),
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('7'))->count(),
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('8'))->count(),
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('9'))->count(),
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('10'))->count(),
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('11'))->count(),
-            Maquina::whereYear('created_at', date('Y'))->whereMonth('created_at', date('12'))->count(),
-        ];*/
     }
 
     public function users()

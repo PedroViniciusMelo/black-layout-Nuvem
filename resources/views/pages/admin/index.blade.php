@@ -151,7 +151,7 @@
                                     <x-button :variant="'danger'" size="'sm'">{{__('Edit')}}</x-button>
                                 </x-slot>
                                 <x-slot name="content">
-                                    <form action="{{ route('update.user', ["id" => $user->id]) }}" method="post">
+                                    <form action="{{ route('user.update', ["id" => $user->id]) }}" method="post">
                                         @csrf
                                         @method('PUT')
                                         <input type="hidden" name="name" value="{{ $user->name }}">
@@ -274,9 +274,9 @@
                         <x-left-table-item>
                             <div>{{$container->id}}</div>
                         </x-left-table-item>
-                        <x-left-table-item>
+                        <x-table-item>
                             <div>{{substr($container->docker_id, 0, 12)}}</div>
-                        </x-left-table-item>
+                        </x-table-item>
                         <x-table-item>
                             <div>{{$container->nickname}}</div>
                         </x-table-item>
@@ -359,10 +359,20 @@
     </x-card>
     <x-slot name="scripts">
         <script>
+            //Create a function to generate random colors
+            function getRandomColor() {
+                let letters = '0123456789ABCDEF';
+                let color = '#';
+                for (var i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+
             $(document).ready(() => {
                 let dataUsuarios = [{
                     x: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
-                    y: [20, 54, 13, 5, 33, 78, 42, 43, 77, 20, 90, 56],
+                    y: @json($graficDataUsers),
                     type: 'bar'
                 }];
 
@@ -387,7 +397,7 @@
 
                 let dataMachines = [{
                     x: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
-                    y: [23, 65, 19, 96, 38, 70, 73, 49, 60, 39, 110, 34],
+                    y: @json($graficDataMachines),
                     type: 'bar'
                 }];
 
@@ -410,11 +420,12 @@
 
                 Plotly.newPlot('machines-per-month', dataMachines, layoutMachines, {responsive: true});
 
-                let colors = ['#5DD4FF', '#FF4040', '#FF309E', '#FBEC2B', '#FFAC07', '#CD56FF', '#33FF56']
+                let labels = @json($imagesLabel);
+                let colors = labels.map(() => getRandomColor())
 
                 let dataImages = [{
-                    labels: ['Nginx', 'Drupal', 'Joomla!', 'Ubuntu', 'WordPress', 'MySQL'],
-                    values: [20, 12, 8, 10, 30, 10],
+                    labels: labels,
+                    values: @json($instancesPerImage),
                     type: 'pie',
                     marker: {
                         colors: colors //cores de cada gráfico

@@ -20,7 +20,7 @@
                 <th>{{__('User')}}</th>
                 <th>{{__('CPU/RAM available')}}</th>
                 <th>{{__('Time Activity')}}</th>
-                <th>{{__('Running')}}</th>
+                <th>{{__('Available')}}</th>
                 <th>{{__('Options')}}</th>
             </x-slot>
             <x-slot name="body">
@@ -45,13 +45,9 @@
                         </x-table-item>
                         <x-table-item>
                             @if($machine->disponivel)
-                                <div class="spinner-grow text-success" role="status">
-                                    <span class="sr-only">Loading...</span>
-                                </div>
+                                <i class="fas fa-check-circle"></i>
                             @else
-                                <div class="text-danger">
-                                    <span class="material-icons">crop_square</span>
-                                </div>
+                                <i class="fas fa-times-circle"></i>
                             @endif
                         </x-table-item>
 

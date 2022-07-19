@@ -45,7 +45,7 @@
                             @endif
                         </x-table-item>
                         <x-right-table-item>
-                            <x-modal>
+                            <x-modal id="{{$user->id}}">
                                 <x-slot name="showModalButton">
                                     <i class="fas fa-ellipsis-v"></i>
                                 </x-slot>
@@ -62,7 +62,7 @@
 
 
                                         <label >Number Containers</label>
-                                        <input type="number" value="{{$user->containers}}">
+                                        <input type="number" name="containers" value="{{$user->containers}}">
 
                                         <label class="form-check-label text-body" for="exampleRadios{{$user->id}}">{{ __('Autorizar acesso.') }}
                                             <input type="checkbox" value="1" name="access" @if($user->acess) checked @endif>

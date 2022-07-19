@@ -125,8 +125,6 @@ class ContainersController extends Controller
         $container = Container::findOrFail($id);
         $docker_id = $container->docker_id;
         $responseStop = Http::post($this->url."/containers/$docker_id/stop")->getStatusCode();
-
-
         if ($responseStop == 204 || $responseStop == 304) {
             $responseDelete = Http::delete($this->url."/containers/$docker_id")->getStatusCode();
             if ($responseDelete == 204) {

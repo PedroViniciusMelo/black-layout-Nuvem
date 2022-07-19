@@ -7,8 +7,8 @@ use App\Http\Requests\Auth\PasswordRequest;
 use App\Http\Requests\Auth\ProfileRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
-use Auth;
-use Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 class UpdateUserController extends Controller
@@ -19,16 +19,19 @@ class UpdateUserController extends Controller
      * @param ProfileRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function __invoke(UserRequest $request, $id)
+    public function __invoke(Request $request)
     {
+        //TODO ajustar validação
+        $user = Auth::user();
         $data = $request->all();
-        $data['access'] = $request->has('access');
-        $user = User::findOrfail($id);
+        $data['access'] = $request->has('acess') ? true : false;
         $result = $user->update($data);
 
-        return redirect()
-            ->back()
-            ->with('success', 'User updated successfully!');
+        if ($result) {
+            return back()->with(['message' => 'Atualizado com sucesso']);
+        } else {
+            return redirect()->back()->with(['message' => 'Erro']);
+        }
     }
 
     public function manageAccess(Request $request, $id){
